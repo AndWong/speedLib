@@ -99,7 +99,7 @@
 
     </LinearLayout>
 
-    <com.tools.speedlib.views.PointerSpeedometer
+    <com.tools.speedlib.views.PointerSpeedView
         android:id="@+id/speedometer"
         android:layout_width="280dp"
         android:layout_height="wrap_content"

@@ -23,7 +23,7 @@ import com.tools.speedlib.views.components.Indicators.SpindleIndicator;
  * this Library build By Anas Altair
  * see it on <a href="https://github.com/anastr/SpeedView">GitHub</a>
  */
-public class PointerSpeedometer extends Speedometer {
+public class PointerSpeedView extends Speedometer {
 
     private Path markPath = new Path();
     private Paint speedometerPaint = new Paint(Paint.ANTI_ALIAS_FLAG),
@@ -36,15 +36,15 @@ public class PointerSpeedometer extends Speedometer {
     private int speedometerColor = Color.parseColor("#eeeeee")
             , pointerColor = Color.WHITE;
 
-    public PointerSpeedometer(Context context) {
+    public PointerSpeedView(Context context) {
         this(context, null);
     }
 
-    public PointerSpeedometer(Context context, AttributeSet attrs) {
+    public PointerSpeedView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public PointerSpeedometer(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PointerSpeedView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
         initAttributeSet(context, attrs);
@@ -85,11 +85,11 @@ public class PointerSpeedometer extends Speedometer {
             initAttributeValue();
             return;
         }
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.PointerSpeedometer, 0, 0);
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.PointerSpeedView, 0, 0);
 
-        speedometerColor = a.getColor(R.styleable.PointerSpeedometer_sv_speedometerColor, speedometerColor);
-        pointerColor = a.getColor(R.styleable.PointerSpeedometer_sv_pointerColor, pointerColor);
-        circlePaint.setColor(a.getColor(R.styleable.PointerSpeedometer_sv_centerCircleColor, circlePaint.getColor()));
+        speedometerColor = a.getColor(R.styleable.PointerSpeedView_sv_speedometerColor, speedometerColor);
+        pointerColor = a.getColor(R.styleable.PointerSpeedView_sv_pointerColor, pointerColor);
+        circlePaint.setColor(a.getColor(R.styleable.PointerSpeedView_sv_centerCircleColor, circlePaint.getColor()));
         a.recycle();
         initAttributeValue();
     }

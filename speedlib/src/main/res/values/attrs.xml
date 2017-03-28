@@ -124,7 +124,7 @@
         <attr name="sv_markWidth" format="dimension"/>
     </declare-styleable>
 
-    <declare-styleable name="PointerSpeedometer" parent="Speedometer">
+    <declare-styleable name="PointerSpeedView" parent="Speedometer">
         <attr name="sv_centerCircleColor" />
         <attr name="sv_speedometerColor" />
         <attr name="sv_pointerColor" format="color"/>

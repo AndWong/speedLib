@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.tools.speedlib.SpeedManager;
 import com.tools.speedlib.listener.NetDelayListener;
 import com.tools.speedlib.listener.SpeedListener;
-import com.tools.speedlib.views.base.Speedometer;
+import com.tools.speedlib.views.PointerSpeedView;
 
 public class MainActivity extends AppCompatActivity {
     private static final double ONE_128KB = 128 * 1024; //128kb
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private static final double NINE_50MB = 50 * 1024 * 1024; //50MB
     private static final double TEN_100MB = 100 * 1024 * 1024; //100MB
 
-    private Speedometer speedometer;
+    private PointerSpeedView speedometer;
     private TextView tx_delay;
     private TextView tx_down;
     private TextView tx_up;
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        speedometer = (Speedometer) findViewById(R.id.speedometer);
+        speedometer = (PointerSpeedView) findViewById(R.id.speedometer);
         tx_delay = (TextView) findViewById(R.id.tx_delay);
         tx_down = (TextView) findViewById(R.id.tx_down);
         tx_up = (TextView) findViewById(R.id.tx_up);
