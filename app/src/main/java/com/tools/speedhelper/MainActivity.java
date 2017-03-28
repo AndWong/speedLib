@@ -10,8 +10,6 @@ import com.tools.speedlib.listener.SpeedListener;
 import com.tools.speedlib.utils.ConverUtil;
 import com.tools.speedlib.views.PointerSpeedView;
 
-import static com.tools.speedlib.utils.ConverUtil.fomartSpeed;
-
 
 public class MainActivity extends AppCompatActivity {
     private PointerSpeedView speedometer;
