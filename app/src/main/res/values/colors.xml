@@ -3,4 +3,42 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- ！！！！！！！注意本内容禁止进行增、删、改。除非产品ui要多颜色标准进行调整！！！！！！！-->
+
+    <!-- 重要-->
+    <!-- 大面积使用、用于背景色、强调文字、icon、按钮-->
+    <color name="C01_ST">#1e96ff</color>
+    <color name="C01_ST_pressed">#1878CC</color>
+    <color name="C01_ST_disabled">#8FCBFF</color>
+    <!-- 大面积使用、用于文字、title、内容-->
+    <color name="C02_ST">#000000</color>
+
+    <!-- 一般-->
+    <!-- 用于提醒文字、红点提醒等-->
+    <color name="C03_ST">#FF3C30</color>
+    <!-- 用于副标题、描述文字、说明文字-->
+    <color name="C04_ST">#929292</color>
+    <!-- 分割线、输入框边框、标签描边-->
+    <color name="C05_ST">#E6E6E6</color>
+    <!-- 页面背景色-->
+    <color name="C06_ST">#EFEFF4</color>
+
+    <!-- 延伸-->
+    <color name="C07_ST">#FFFFFF</color>
+    <color name="C07_ST_pressed">@color/C12_ST</color>
+    <color name="C07_ST_disabled">#7FFFFFFF</color>
+    <color name="C08_ST">#0095CB</color>
+    <color name="C09_ST">#80DDFF</color>
+    <color name="C10_ST">#555555</color>
+    <color name="C12_ST">#CCCCCC</color>
+
+
+    <!-- 其他-->
+    <color name="C15_ST">#ff9602</color>
+    <color name="C16_ST">#4AD965</color>
+    <color name="C17_ST">#007AFF</color>
+    <color name="C17_ST_pressed">#0062CC</color>
+    <color name="C17_ST_disabled">#80BDFF</color>
+    <color name="C18_ST">#FF2C54</color>
 </resources>

@@ -2,8 +2,10 @@ package com.tools.speedhelper;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 import com.tools.speedlib.SpeedManager;
+import com.tools.speedlib.listener.NetDelayListener;
 import com.tools.speedlib.listener.SpeedListener;
 import com.tools.speedlib.views.base.Speedometer;
 
@@ -20,23 +22,52 @@ public class MainActivity extends AppCompatActivity {
     private static final double TEN_100MB = 100 * 1024 * 1024; //100MB
 
     private Speedometer speedometer;
+    private TextView tx_delay;
+    private TextView tx_down;
+    private TextView tx_up;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         speedometer = (Speedometer) findViewById(R.id.speedometer);
+        tx_delay = (TextView) findViewById(R.id.tx_delay);
+        tx_down = (TextView) findViewById(R.id.tx_down);
+        tx_up = (TextView) findViewById(R.id.tx_up);
 
         SpeedManager speedManager = new SpeedManager.Builder()
+                .setNetDelayListener(new NetDelayListener() {
+                    @Override
+                    public void result(String delay) {
+                        tx_delay.setText(delay);
+                    }
+                })
                 .setDownloadListener(new SpeedListener() {
                     @Override
                     public void speeding(double speed) {
-                        setSpeedView(speed);
+                        String[] result = fomartSpeed(speed);
+                        tx_down.setText(result[0] + result[1]);
+                        setSpeedView(speed, result);
                     }
 
                     @Override
                     public void finishSpeed(double finalSpeed) {
-                        setSpeedView(finalSpeed);
+                        String[] result = fomartSpeed(finalSpeed);
+                        tx_down.setText(result[0] + result[1]);
+                        setSpeedView(finalSpeed, result);
+                    }
+                })
+                .setUpLoadListener(new SpeedListener() {
+                    @Override
+                    public void speeding(double speed) {
+                        String[] result = fomartSpeed(speed);
+                        tx_up.setText(result[0] + result[1]);
+                    }
+
+                    @Override
+                    public void finishSpeed(double finalSpeed) {
+                        String[] result = fomartSpeed(finalSpeed);
+                        tx_up.setText(result[0] + result[1]);
                     }
                 })
                 .setSpeedCount(6)
@@ -44,8 +75,7 @@ public class MainActivity extends AppCompatActivity {
         speedManager.startSpeed();
     }
 
-    private void setSpeedView(double speed) {
-        String[] result = fomartSpeed(speed);
+    private void setSpeedView(double speed, String[] result) {
         if (null != result && 2 == result.length) {
             speedometer.setCurrentSpeed(result[0]);
             speedometer.setUnit(result[1]);

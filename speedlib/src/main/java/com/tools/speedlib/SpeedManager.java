@@ -4,6 +4,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import com.tools.speedlib.helper.ProgressHelper;
+import com.tools.speedlib.listener.NetDelayListener;
 import com.tools.speedlib.listener.SpeedListener;
 import com.tools.speedlib.listener.impl.UIProgressListener;
 
@@ -32,7 +33,7 @@ public class SpeedManager {
     private Call call;
     private String url;
     private int maxCount;
-    private SpeedListener delayListener;
+    private NetDelayListener delayListener;
     private SpeedListener downloadListener;
     private SpeedListener upListener;
 
@@ -147,8 +148,7 @@ public class SpeedManager {
                 // rtt min/avg/max/mdev = 32.745/78.359/112.030/33.451 ms
                 if (content.contains("avg")) {
                     String[] delays = content.split("/");
-                    double delay = Double.valueOf(delays[4]);
-                    delayListener.finishSpeed(delay);
+                    delayListener.result(delays[4]);
                 }
             }
             // PING的状态
@@ -206,7 +206,7 @@ public class SpeedManager {
         private static final int MAX_COUNT = 6; //最多回调的次数（每秒回调一次）
         private String url;
         private int maxCount;
-        private SpeedListener delayListener;
+        private NetDelayListener delayListener;
         private SpeedListener downloadListener;
         private SpeedListener upListener;
 
@@ -225,7 +225,7 @@ public class SpeedManager {
             return this;
         }
 
-        public Builder setNetDelayListener(SpeedListener delayListener) {
+        public Builder setNetDelayListener(NetDelayListener delayListener) {
             this.delayListener = delayListener;
             return this;
         }
