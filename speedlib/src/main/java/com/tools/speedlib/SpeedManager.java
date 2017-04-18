@@ -202,7 +202,7 @@ public class SpeedManager {
      * 构建测速管理类
      */
     public static final class Builder {
-        private static final String DEFAULT_URL = "http://101.95.44.216:8081/httpcs/ocs/video/huaxia/zqxs/05jiayouxishi700k.Index.flv";
+        private static final String DEFAULT_URL = "http://dldir1.qq.com/qqfile/QQIntl/QQi_wireless/Android/qqi_4.6.13.6034_office.apk";
         private static final int MAX_COUNT = 6; //最多回调的次数（每秒回调一次）
         private String url;
         private int maxCount;
