@@ -31,11 +31,11 @@ import okhttp3.Response;
 public class SpeedManager {
     private OkHttpClient client;
     private Call call;
-    private String url;
-    private int maxCount;
-    private NetDelayListener delayListener;
-    private SpeedListener downloadListener;
-    private SpeedListener upListener;
+    private String pingCmd; //网络延时的指令
+    private String url; //网络测速的地址
+    private int maxCount; //测速的时间总数
+    private NetDelayListener delayListener; //网络延时回调
+    private SpeedListener speedListener; //测速回调
 
     private double[] mTotalSpeeds = null; //保存每秒的速度
     private double mTempSpeed = 0; //每秒的速度
@@ -55,8 +55,8 @@ public class SpeedManager {
     public void startSpeed() {
         mSpeedCount = 0;
         mTempSpeed = 0;
-        mTotalSpeeds = new double[maxCount];
-        boolean isPingSucc = pingDelay();
+        mTotalSpeeds = new double[this.maxCount];
+        boolean isPingSucc = pingDelay(this.pingCmd);
         if (isPingSucc) {
             speed();
         }
@@ -79,32 +79,7 @@ public class SpeedManager {
         UIProgressListener uiProgressListener = new UIProgressListener() {
             @Override
             public void onUIProgress(int taskId, long currentBytes, long contentLength, boolean done) {
-                if (mSpeedCount < maxCount) {
-                    mTempSpeed = currentBytes / (mSpeedCount + 1);
-                    mTotalSpeeds[mSpeedCount] = mTempSpeed;
-                    mSpeedCount++;
-                    //回调每秒的速度
-                    if (null != downloadListener) {
-                        downloadListener.speeding(mTempSpeed);
-                    }
-                    if (null != upListener) {
-                        upListener.speeding(mTempSpeed / 4);
-                    }
-                }
-                if (mSpeedCount >= maxCount || done) {
-                    finishSpeed();
-                    //回调最终的速度
-                    double finalSpeedTotal = 0;
-                    for (int i = 0; i < mTotalSpeeds.length; i++) {
-                        finalSpeedTotal += mTotalSpeeds[i];
-                    }
-                    if (null != downloadListener) {
-                        downloadListener.finishSpeed(finalSpeedTotal / mTotalSpeeds.length);
-                    }
-                    if (null != upListener) {
-                        upListener.finishSpeed(finalSpeedTotal / mTotalSpeeds.length / 4);
-                    }
-                }
+                handleSpeed(currentBytes, done);
             }
 
             @Override
@@ -118,7 +93,7 @@ public class SpeedManager {
             }
         };
         Request request = new Request.Builder()
-                .url(url)
+                .url(this.url)
                 .cacheControl(CacheControl.FORCE_NETWORK)
                 .build();
         call = ProgressHelper.addProgressResponseListener(client, uiProgressListener).newCall(request);
@@ -135,20 +110,24 @@ public class SpeedManager {
         });
     }
 
-    private boolean pingDelay() {
+    /**
+     * 网络延时
+     *
+     * @return
+     */
+    private boolean pingDelay(String cmd) {
         if (null == this.delayListener) {
             return true;
         }
         try {
-            String ip = "www.baidu.com";
-            Process p = Runtime.getRuntime().exec("ping -c 3 " + ip);// -c ping次数
+            Process p = Runtime.getRuntime().exec(cmd);// -c ping次数
             BufferedReader buf = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String content;
             while ((content = buf.readLine()) != null) {
                 // rtt min/avg/max/mdev = 32.745/78.359/112.030/33.451 ms
                 if (content.contains("avg")) {
                     String[] delays = content.split("/");
-                    delayListener.result(delays[4]);
+                    delayListener.result(delays[4]+"ms");
                 }
             }
             // PING的状态
@@ -160,6 +139,35 @@ public class SpeedManager {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * 处理下载文件的回调
+     *
+     * @param currentBytes
+     * @param done
+     */
+    private void handleSpeed(long currentBytes, boolean done) {
+        if (mSpeedCount < maxCount) {
+            mTempSpeed = currentBytes / (mSpeedCount + 1);
+            mTotalSpeeds[mSpeedCount] = mTempSpeed;
+            mSpeedCount++;
+            //回调每秒的速度
+            if (null != speedListener) {
+                speedListener.speeding(mTempSpeed, mTempSpeed / 4);
+            }
+        }
+        if (mSpeedCount >= maxCount || done) {
+            finishSpeed();
+            //回调最终的速度
+            double finalSpeedTotal = 0;
+            for (int i = 0; i < mTotalSpeeds.length; i++) {
+                finalSpeedTotal += mTotalSpeeds[i];
+            }
+            if (null != speedListener) {
+                speedListener.finishSpeed(finalSpeedTotal / mTotalSpeeds.length, finalSpeedTotal / mTotalSpeeds.length / 4);
+            }
+        }
     }
 
     private byte[] getBytesFromStream(InputStream is) throws IOException {
@@ -202,17 +210,24 @@ public class SpeedManager {
      * 构建测速管理类
      */
     public static final class Builder {
+        private static final String DEFAULE_CMD = "ping -c 3 www.baidu.com";
         private static final String DEFAULT_URL = "http://dldir1.qq.com/qqfile/QQIntl/QQi_wireless/Android/qqi_4.6.13.6034_office.apk";
         private static final int MAX_COUNT = 6; //最多回调的次数（每秒回调一次）
+        private String pingCmd;
         private String url;
         private int maxCount;
         private NetDelayListener delayListener;
-        private SpeedListener downloadListener;
-        private SpeedListener upListener;
+        private SpeedListener speedListener;
 
         public Builder() {
+            pingCmd = DEFAULE_CMD;
             url = DEFAULT_URL;
             maxCount = MAX_COUNT;
+        }
+
+        public Builder setPindCmd(String cmd) {
+            this.pingCmd = cmd;
+            return this;
         }
 
         public Builder setSpeedUrl(String url) {
@@ -230,17 +245,15 @@ public class SpeedManager {
             return this;
         }
 
-        public Builder setDownloadListener(SpeedListener downloadListener) {
-            this.downloadListener = downloadListener;
-            return this;
-        }
-
-        public Builder setUpLoadListener(SpeedListener upListener) {
-            this.upListener = upListener;
+        public Builder setSpeedListener(SpeedListener speedListener) {
+            this.speedListener = speedListener;
             return this;
         }
 
         private void applayConfig(SpeedManager manager) {
+            if (!TextUtils.isEmpty(this.pingCmd)) {
+                manager.pingCmd = this.pingCmd;
+            }
             if (!TextUtils.isEmpty(this.url)) {
                 manager.url = this.url;
             }
@@ -250,11 +263,8 @@ public class SpeedManager {
             if (null != this.delayListener) {
                 manager.delayListener = this.delayListener;
             }
-            if (null != this.downloadListener) {
-                manager.downloadListener = this.downloadListener;
-            }
-            if (null != this.upListener) {
-                manager.upListener = this.upListener;
+            if (null != this.speedListener) {
+                manager.speedListener = this.speedListener;
             }
         }
 

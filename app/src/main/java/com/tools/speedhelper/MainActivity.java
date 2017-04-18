@@ -33,32 +33,25 @@ public class MainActivity extends AppCompatActivity {
                         tx_delay.setText(delay);
                     }
                 })
-                .setDownloadListener(new SpeedListener() {
+                .setSpeedListener(new SpeedListener() {
                     @Override
-                    public void speeding(double speed) {
-                        String[] result = ConverUtil.fomartSpeed(speed);
-                        tx_down.setText(result[0] + result[1]);
-                        setSpeedView(speed, result);
+                    public void speeding(double downSpeed, double upSpeed) {
+                        String[] downResult = ConverUtil.fomartSpeed(downSpeed);
+                        tx_down.setText(downResult[0] + downResult[1]);
+                        setSpeedView(downSpeed, downResult);
+
+                        String[] upResult = ConverUtil.fomartSpeed(upSpeed);
+                        tx_up.setText(upResult[0] + upResult[1]);
                     }
 
                     @Override
-                    public void finishSpeed(double finalSpeed) {
-                        String[] result = ConverUtil.fomartSpeed(finalSpeed);
-                        tx_down.setText(result[0] + result[1]);
-                        setSpeedView(finalSpeed, result);
-                    }
-                })
-                .setUpLoadListener(new SpeedListener() {
-                    @Override
-                    public void speeding(double speed) {
-                        String[] result = ConverUtil.fomartSpeed(speed);
-                        tx_up.setText(result[0] + result[1]);
-                    }
+                    public void finishSpeed(double finalDownSpeed, double finalUpSpeed) {
+                        String[] downResult = ConverUtil.fomartSpeed(finalDownSpeed);
+                        tx_down.setText(downResult[0] + downResult[1]);
+                        setSpeedView(finalDownSpeed, downResult);
 
-                    @Override
-                    public void finishSpeed(double finalSpeed) {
-                        String[] result = ConverUtil.fomartSpeed(finalSpeed);
-                        tx_up.setText(result[0] + result[1]);
+                        String[] upResult = ConverUtil.fomartSpeed(finalUpSpeed);
+                        tx_up.setText(upResult[0] + upResult[1]);
                     }
                 })
                 .setSpeedCount(6)
