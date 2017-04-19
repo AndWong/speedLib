@@ -90,6 +90,7 @@ public class SpeedManager {
             @Override
             public void onUIFinish(int taskId, long currentBytes, long contentLength, boolean done) {
                 super.onUIFinish(taskId, currentBytes, contentLength, done);
+                handleResultSpeed(done);
             }
         };
         Request request = new Request.Builder()
@@ -157,7 +158,15 @@ public class SpeedManager {
                 speedListener.speeding(mTempSpeed, mTempSpeed / 4);
             }
         }
-        if (mSpeedCount >= maxCount || done) {
+        handleResultSpeed(mSpeedCount >= maxCount);
+    }
+
+    /**
+     * 结果的处理
+     * @param isDone
+     */
+    private void handleResultSpeed(boolean isDone){
+        if(isDone){
             finishSpeed();
             //回调最终的速度
             double finalSpeedTotal = 0;
@@ -211,7 +220,8 @@ public class SpeedManager {
      */
     public static final class Builder {
         private static final String DEFAULE_CMD = "ping -c 3 www.baidu.com";
-        private static final String DEFAULT_URL = "http://dldir1.qq.com/qqfile/QQIntl/QQi_wireless/Android/qqi_4.6.13.6034_office.apk";
+        //private static final String DEFAULT_URL = "http://dldir1.qq.com/qqfile/QQIntl/QQi_wireless/Android/qqi_4.6.13.6034_office.apk";
+        private static final String DEFAULT_URL = "http://img01.taobaocdn.com/imgextra/i1/1034943860/TB2eHHAaVXXXXaCXXXXXXXXXXXX_!!1034943860.jpg";
         private static final int MAX_COUNT = 6; //最多回调的次数（每秒回调一次）
         private String pingCmd;
         private String url;
