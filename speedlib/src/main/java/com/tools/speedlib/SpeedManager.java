@@ -58,7 +58,7 @@ public class SpeedManager {
         mTempSpeed = 0;
         mTotalSpeeds = new SparseArray<>();
         boolean isPingSucc = pingDelay(this.pingCmd);
-        if (isPingSucc) {
+        if (isPingSucc && null != speedListener) {
             speed();
         }
     }
@@ -129,7 +129,7 @@ public class SpeedManager {
                 // rtt min/avg/max/mdev = 32.745/78.359/112.030/33.451 ms
                 if (content.contains("avg")) {
                     String[] delays = content.split("/");
-                    delayListener.result(delays[4]+"ms");
+                    delayListener.result(delays[4] + "ms");
                 }
             }
             // PING的状态
@@ -152,7 +152,7 @@ public class SpeedManager {
     private void handleSpeed(long currentBytes, boolean done) {
         if (mSpeedCount < maxCount) {
             mTempSpeed = currentBytes / (mSpeedCount + 1);
-            mTotalSpeeds.put(mSpeedCount,mTempSpeed);
+            mTotalSpeeds.put(mSpeedCount, mTempSpeed);
             mSpeedCount++;
             //回调每秒的速度
             if (null != speedListener) {
@@ -164,10 +164,11 @@ public class SpeedManager {
 
     /**
      * 结果的处理
+     *
      * @param isDone
      */
-    private void handleResultSpeed(boolean isDone){
-        if(isDone){
+    private void handleResultSpeed(boolean isDone) {
+        if (isDone) {
             finishSpeed();
             //回调最终的速度
             long finalSpeedTotal = 0L;
