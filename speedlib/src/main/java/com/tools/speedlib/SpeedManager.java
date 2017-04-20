@@ -2,6 +2,7 @@ package com.tools.speedlib;
 
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.tools.speedlib.helper.ProgressHelper;
@@ -10,9 +11,7 @@ import com.tools.speedlib.listener.SpeedListener;
 import com.tools.speedlib.listener.impl.UIProgressListener;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -106,10 +105,21 @@ public class SpeedManager {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                byte[] bytes = getBytesFromStream(response.body().byteStream());
-                saveBytesToFile(bytes, Environment.getExternalStorageState() + "/temp.apk");
+                readBytesFromStream(response.body().byteStream());
             }
         });
+    }
+
+    /**
+     * 在根目录下创建指定的文件
+     *
+     * @param filename
+     * @return
+     */
+    private File createFilePath(String filename) {
+        File rootFile = Environment.getExternalStorageDirectory();
+        File logFile = new File(rootFile, "WiFibanlvLog" + File.separator + filename);
+        return logFile;
     }
 
     /**
@@ -181,38 +191,12 @@ public class SpeedManager {
         }
     }
 
-    private byte[] getBytesFromStream(InputStream is) throws IOException {
+    private void readBytesFromStream(InputStream is) throws IOException {
         int len;
         int size = 1024;
-        byte[] buf;
-
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        buf = new byte[size];
+        byte[] buf = new byte[size];
         while ((len = is.read(buf, 0, size)) != -1) {
-            bos.write(buf, 0, len);
-        }
-        buf = bos.toByteArray();
-
-        return buf;
-    }
-
-    private void saveBytesToFile(byte[] bytes, String path) {
-        FileOutputStream fileOuputStream = null;
-        try {
-            fileOuputStream = new FileOutputStream(path);
-            fileOuputStream.write(bytes);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (null != fileOuputStream) {
-                    fileOuputStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Log.d("TAG", "byte length : " + len);
         }
     }
 
