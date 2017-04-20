@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .setSpeedListener(new SpeedListener() {
                     @Override
-                    public void speeding(double downSpeed, double upSpeed) {
+                    public void speeding(long downSpeed, long upSpeed) {
                         String[] downResult = ConverUtil.fomartSpeed(downSpeed);
                         tx_down.setText(downResult[0] + downResult[1]);
                         setSpeedView(downSpeed, downResult);
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void finishSpeed(double finalDownSpeed, double finalUpSpeed) {
+                    public void finishSpeed(long finalDownSpeed, long finalUpSpeed) {
                         String[] downResult = ConverUtil.fomartSpeed(finalDownSpeed);
                         tx_down.setText(downResult[0] + downResult[1]);
                         setSpeedView(finalDownSpeed, downResult);
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         speedManager.startSpeed();
     }
 
-    private void setSpeedView(double speed, String[] result) {
+    private void setSpeedView(long speed, String[] result) {
         if (null != result && 2 == result.length) {
             speedometer.setCurrentSpeed(result[0]);
             speedometer.setUnit(result[1]);

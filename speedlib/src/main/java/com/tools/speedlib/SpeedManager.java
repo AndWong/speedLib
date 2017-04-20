@@ -2,6 +2,7 @@ package com.tools.speedlib;
 
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.SparseArray;
 
 import com.tools.speedlib.helper.ProgressHelper;
 import com.tools.speedlib.listener.NetDelayListener;
@@ -37,8 +38,8 @@ public class SpeedManager {
     private NetDelayListener delayListener; //网络延时回调
     private SpeedListener speedListener; //测速回调
 
-    private double[] mTotalSpeeds = null; //保存每秒的速度
-    private double mTempSpeed = 0; //每秒的速度
+    private SparseArray<Long> mTotalSpeeds = new SparseArray<>(); //保存每秒的速度
+    private long mTempSpeed = 0L; //每秒的速度
     private int mSpeedCount = 0; //文件下载进度的回调次数
 
     private SpeedManager() {
@@ -55,7 +56,7 @@ public class SpeedManager {
     public void startSpeed() {
         mSpeedCount = 0;
         mTempSpeed = 0;
-        mTotalSpeeds = new double[this.maxCount];
+        mTotalSpeeds = new SparseArray<>();
         boolean isPingSucc = pingDelay(this.pingCmd);
         if (isPingSucc) {
             speed();
@@ -151,14 +152,14 @@ public class SpeedManager {
     private void handleSpeed(long currentBytes, boolean done) {
         if (mSpeedCount < maxCount) {
             mTempSpeed = currentBytes / (mSpeedCount + 1);
-            mTotalSpeeds[mSpeedCount] = mTempSpeed;
+            mTotalSpeeds.put(mSpeedCount,mTempSpeed);
             mSpeedCount++;
             //回调每秒的速度
             if (null != speedListener) {
                 speedListener.speeding(mTempSpeed, mTempSpeed / 4);
             }
         }
-        handleResultSpeed(mSpeedCount >= maxCount);
+        handleResultSpeed(mSpeedCount >= maxCount || done);
     }
 
     /**
@@ -169,12 +170,12 @@ public class SpeedManager {
         if(isDone){
             finishSpeed();
             //回调最终的速度
-            double finalSpeedTotal = 0;
-            for (int i = 0; i < mTotalSpeeds.length; i++) {
-                finalSpeedTotal += mTotalSpeeds[i];
+            long finalSpeedTotal = 0L;
+            for (int i = 0; i < mTotalSpeeds.size(); i++) {
+                finalSpeedTotal += mTotalSpeeds.get(i);
             }
             if (null != speedListener) {
-                speedListener.finishSpeed(finalSpeedTotal / mTotalSpeeds.length, finalSpeedTotal / mTotalSpeeds.length / 4);
+                speedListener.finishSpeed(finalSpeedTotal / mTotalSpeeds.size(), finalSpeedTotal / mTotalSpeeds.size() / 4);
             }
         }
     }
@@ -220,8 +221,7 @@ public class SpeedManager {
      */
     public static final class Builder {
         private static final String DEFAULE_CMD = "ping -c 3 www.baidu.com";
-        //private static final String DEFAULT_URL = "http://dldir1.qq.com/qqfile/QQIntl/QQi_wireless/Android/qqi_4.6.13.6034_office.apk";
-        private static final String DEFAULT_URL = "http://img01.taobaocdn.com/imgextra/i1/1034943860/TB2eHHAaVXXXXaCXXXXXXXXXXXX_!!1034943860.jpg";
+        private static final String DEFAULT_URL = "http://dldir1.qq.com/qqfile/QQIntl/QQi_wireless/Android/qqi_4.6.13.6034_office.apk";
         private static final int MAX_COUNT = 6; //最多回调的次数（每秒回调一次）
         private String pingCmd;
         private String url;

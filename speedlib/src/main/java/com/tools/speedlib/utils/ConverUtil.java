@@ -5,16 +5,16 @@ package com.tools.speedlib.utils;
  * Created by wong on 17-3-28.
  */
 public class ConverUtil {
-    private static final double ONE_128KB = 128 * 1024; //128kb
-    private static final double TWO_256KB = 256 * 1024; //256kb
-    private static final double THREE_512KB = 512 * 1024; //512kb
-    private static final double FOUR_1MB = 1024 * 1024; //1MB
-    private static final double FIVE_2MB = 2 * 1024 * 1024; //2MB
-    private static final double SIX_5MB = 5 * 1024 * 1024; //5MB
-    private static final double SEVEN_10MB = 10 * 1024 * 1024; //10MB
-    private static final double EIGHT_20MB = 20 * 1024 * 1024; //20MB
-    private static final double NINE_50MB = 50 * 1024 * 1024; //50MB
-    private static final double TEN_100MB = 100 * 1024 * 1024; //100MB
+    private static final long ONE_128KB = 128 * 1024L; //128kb
+    private static final long TWO_256KB = 256 * 1024L; //256kb
+    private static final long THREE_512KB = 512 * 1024L; //512kb
+    private static final long FOUR_1MB = 1024 * 1024L; //1MB
+    private static final long FIVE_2MB = 2 * 1024 * 1024L; //2MB
+    private static final long SIX_5MB = 5 * 1024 * 1024L; //5MB
+    private static final long SEVEN_10MB = 10 * 1024 * 1024L; //10MB
+    private static final long EIGHT_20MB = 20 * 1024 * 1024L; //20MB
+    private static final long NINE_50MB = 50 * 1024 * 1024L; //50MB
+    private static final long TEN_100MB = 100 * 1024 * 1024L; //100MB
 
     /**
      * 转化成百分比
@@ -22,7 +22,7 @@ public class ConverUtil {
      * @param speed
      * @return
      */
-    public static int getSpeedPercent(double speed) {
+    public static int getSpeedPercent(long speed) {
         if (speed >= 0 && speed < ONE_128KB) {
             return conver(speed * 10 / ONE_128KB);
         } else if (speed >= ONE_128KB && speed < TWO_256KB) {
@@ -52,7 +52,7 @@ public class ConverUtil {
      * @param originData
      * @return
      */
-    private static int conver(double originData) {
+    private static int conver(long originData) {
         return Integer.parseInt(new java.text.DecimalFormat("0").format(originData));
     }
 
@@ -62,12 +62,12 @@ public class ConverUtil {
      * @param speed
      * @return
      */
-    public static String[] fomartSpeed(double speed) {
+    public static String[] fomartSpeed(long speed) {
         final long UNIT_KB = 1024;
         final long UNIT_MB = UNIT_KB * 1024;
         final long UNIT_GB = UNIT_MB * 1024;
         int unit = 0;
-        long temp = (long) speed; //unit B
+        long temp = speed; //unit B
         while (temp / 1024 > 0) {
             temp = temp / 1024;
             unit++;
@@ -77,19 +77,19 @@ public class ConverUtil {
             case 0: //unit B
                 return new String[]{temp + "", "B/s"};
             case 1: //unit KB
-                floatPart = (long) speed % UNIT_KB + "";
+                floatPart = speed % UNIT_KB + "";
                 if (floatPart.length() >= 2) {
                     floatPart = floatPart.substring(0, 2);
                 }
                 return new String[]{temp + "." + floatPart, "KB/S"};
             case 2: //unit MB
-                floatPart = (long) speed % UNIT_MB + "";
+                floatPart = speed % UNIT_MB + "";
                 if (floatPart.length() >= 2) {
                     floatPart = floatPart.substring(0, 2);
                 }
                 return new String[]{temp + "." + floatPart, "MB/S"};
             case 3: //unit GB
-                floatPart = (long) speed % UNIT_GB + "";
+                floatPart = speed % UNIT_GB + "";
                 if (floatPart.length() >= 2) {
                     floatPart = floatPart.substring(0, 2);
                 }
