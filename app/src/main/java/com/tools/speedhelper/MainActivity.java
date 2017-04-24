@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                         tx_up.setText(upResult[0] + upResult[1]);
                     }
                 })
+                .setPindCmd("59.61.92.196")
                 .setSpeedCount(6)
                 .builder();
         speedManager.startSpeed();

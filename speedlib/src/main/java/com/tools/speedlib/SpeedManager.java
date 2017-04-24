@@ -9,12 +9,11 @@ import com.tools.speedlib.helper.ProgressHelper;
 import com.tools.speedlib.listener.NetDelayListener;
 import com.tools.speedlib.listener.SpeedListener;
 import com.tools.speedlib.listener.impl.UIProgressListener;
+import com.tools.speedlib.runnable.NetworkDelayRunnable;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.CacheControl;
@@ -128,25 +127,41 @@ public class SpeedManager {
      * @return
      */
     private boolean pingDelay(String cmd) {
+//        if (null == this.delayListener) {
+//            return true;
+//        }
+//        try {
+//            Process p = Runtime.getRuntime().exec(cmd);// -c ping次数
+//            BufferedReader buf = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//            String content;
+//            while ((content = buf.readLine()) != null) {
+//                // rtt min/avg/max/mdev = 32.745/78.359/112.030/33.451 ms
+//                if (content.contains("avg")) {
+//                    String[] delays = content.split("/");
+//                    delayListener.result(delays[4] + "ms");
+//                    break;
+//                }
+//            }
+//            // PING的状态
+//            int status = p.waitFor();
+//            if (status == 0) {
+//                return true;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return false;
+
         if (null == this.delayListener) {
             return true;
         }
         try {
-            Process p = Runtime.getRuntime().exec(cmd);// -c ping次数
-            BufferedReader buf = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String content;
-            while ((content = buf.readLine()) != null) {
-                // rtt min/avg/max/mdev = 32.745/78.359/112.030/33.451 ms
-                if (content.contains("avg")) {
-                    String[] delays = content.split("/");
-                    delayListener.result(delays[4] + "ms");
-                }
-            }
-            // PING的状态
-            int status = p.waitFor();
-            if (status == 0) {
-                return true;
-            }
+            NetworkDelayRunnable delayRunnable = new NetworkDelayRunnable(cmd);
+            Thread thread = new Thread(delayRunnable);
+            thread.start();
+            thread.join(5000L);
+            delayListener.result(delayRunnable.getDelayTime());
+            return delayRunnable.isPingSucc();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -205,7 +220,7 @@ public class SpeedManager {
      * 构建测速管理类
      */
     public static final class Builder {
-        private static final String DEFAULE_CMD = "ping -c 3 www.baidu.com";
+        private static final String DEFAULE_CMD = "www.baidu.com";
         private static final String DEFAULT_URL = "http://dldir1.qq.com/qqfile/QQIntl/QQi_wireless/Android/qqi_4.6.13.6034_office.apk";
         private static final int MAX_COUNT = 6; //最多回调的次数（每秒回调一次）
         private String pingCmd;
@@ -247,7 +262,7 @@ public class SpeedManager {
 
         private void applayConfig(SpeedManager manager) {
             if (!TextUtils.isEmpty(this.pingCmd)) {
-                manager.pingCmd = this.pingCmd;
+                manager.pingCmd = "ping -c 3 " + this.pingCmd;
             }
             if (!TextUtils.isEmpty(this.url)) {
                 manager.url = this.url;
