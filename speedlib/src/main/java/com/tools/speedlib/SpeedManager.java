@@ -1,6 +1,5 @@
 package com.tools.speedlib;
 
-import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
@@ -11,7 +10,6 @@ import com.tools.speedlib.listener.SpeedListener;
 import com.tools.speedlib.listener.impl.UIProgressListener;
 import com.tools.speedlib.runnable.NetworkDelayRunnable;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
@@ -107,18 +105,6 @@ public class SpeedManager {
                 readBytesFromStream(response.body().byteStream());
             }
         });
-    }
-
-    /**
-     * 在根目录下创建指定的文件
-     *
-     * @param filename
-     * @return
-     */
-    private File createFilePath(String filename) {
-        File rootFile = Environment.getExternalStorageDirectory();
-        File logFile = new File(rootFile, "WiFibanlvLog" + File.separator + filename);
-        return logFile;
     }
 
     /**
