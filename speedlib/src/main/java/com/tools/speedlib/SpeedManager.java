@@ -1,5 +1,7 @@
 package com.tools.speedlib;
 
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
@@ -9,6 +11,7 @@ import com.tools.speedlib.listener.NetDelayListener;
 import com.tools.speedlib.listener.SpeedListener;
 import com.tools.speedlib.listener.impl.UIProgressListener;
 import com.tools.speedlib.runnable.NetworkDelayRunnable;
+import com.tools.speedlib.utils.TimerTaskUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,17 +29,31 @@ import okhttp3.Response;
  * Created by wong on 17-3-27.
  */
 public class SpeedManager {
+    private static final int MSG_TIMEOUT = 1000;
     private OkHttpClient client;
     private Call call;
     private String pingCmd; //网络延时的指令
     private String url; //网络测速的地址
     private int maxCount; //测速的时间总数
+    private long timeOut; //超时时间
     private NetDelayListener delayListener; //网络延时回调
     private SpeedListener speedListener; //测速回调
 
     private SparseArray<Long> mTotalSpeeds = new SparseArray<>(); //保存每秒的速度
     private long mTempSpeed = 0L; //每秒的速度
     private int mSpeedCount = 0; //文件下载进度的回调次数
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case MSG_TIMEOUT:
+                    handleResultSpeed(0L, true);
+                    break;
+            }
+        }
+    };
 
     private SpeedManager() {
         client = new OkHttpClient.Builder()
@@ -73,6 +90,7 @@ public class SpeedManager {
      * 下载速度和上传速度
      */
     private void speed() {
+        TimerTaskUtil.setTimer(mHandler, MSG_TIMEOUT, timeOut);
         UIProgressListener uiProgressListener = new UIProgressListener() {
             @Override
             public void onUIProgress(int taskId, long currentBytes, long contentLength, boolean done) {
@@ -190,9 +208,15 @@ public class SpeedManager {
             if (null != speedListener) {
                 if (mTotalSpeeds.size() > 0) {
                     speedListener.finishSpeed(finalSpeedTotal / mTotalSpeeds.size(), finalSpeedTotal / mTotalSpeeds.size() / 4);
-                } else {
+                } else if (0 != currentBytes) {
+                    //文件较小时可能出现
                     speedListener.finishSpeed(currentBytes, currentBytes / 4);
+                } else {
+                    //超时
+                    speedListener.finishSpeed(0L, 0L);
+                    speedListener = null;
                 }
+                TimerTaskUtil.cacleTimer(mHandler, MSG_TIMEOUT);
             }
         }
     }
@@ -217,6 +241,7 @@ public class SpeedManager {
         private String pingCmd;
         private String url;
         private int maxCount;
+        private long timeOut;
         private NetDelayListener delayListener;
         private SpeedListener speedListener;
 
@@ -224,6 +249,7 @@ public class SpeedManager {
             pingCmd = DEFAULE_CMD;
             url = DEFAULT_URL;
             maxCount = MAX_COUNT;
+            timeOut = MAX_COUNT * 1000 + 5000;
         }
 
         public Builder setPindCmd(String cmd) {
@@ -238,6 +264,11 @@ public class SpeedManager {
 
         public Builder setSpeedCount(int maxCount) {
             this.maxCount = maxCount;
+            return this;
+        }
+
+        public Builder setSpeedTimeOut(long timeOut) {
+            this.timeOut = timeOut;
             return this;
         }
 
@@ -260,6 +291,9 @@ public class SpeedManager {
             }
             if (0 != this.maxCount) {
                 manager.maxCount = this.maxCount;
+            }
+            if (0L != this.timeOut) {
+                manager.timeOut = this.timeOut;
             }
             if (null != this.delayListener) {
                 manager.delayListener = this.delayListener;
