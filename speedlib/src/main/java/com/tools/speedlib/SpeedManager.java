@@ -187,10 +187,12 @@ public class SpeedManager {
             for (int i = 0; i < mTotalSpeeds.size(); i++) {
                 finalSpeedTotal += mTotalSpeeds.get(i);
             }
-            if (null != speedListener && mTotalSpeeds.size() > 0) {
-                speedListener.finishSpeed(finalSpeedTotal / mTotalSpeeds.size(), finalSpeedTotal / mTotalSpeeds.size() / 4);
-            } else {
-                speedListener.finishSpeed(currentBytes, currentBytes / 4);
+            if (null != speedListener) {
+                if (mTotalSpeeds.size() > 0) {
+                    speedListener.finishSpeed(finalSpeedTotal / mTotalSpeeds.size(), finalSpeedTotal / mTotalSpeeds.size() / 4);
+                } else {
+                    speedListener.finishSpeed(currentBytes, currentBytes / 4);
+                }
             }
         }
     }
