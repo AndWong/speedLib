@@ -87,7 +87,7 @@ public class SpeedManager {
             @Override
             public void onUIFinish(int taskId, long currentBytes, long contentLength, boolean done) {
                 super.onUIFinish(taskId, currentBytes, contentLength, done);
-                handleResultSpeed(done);
+                handleResultSpeed(currentBytes, done);
             }
         };
         Request request = new Request.Builder()
@@ -170,15 +170,16 @@ public class SpeedManager {
                 speedListener.speeding(mTempSpeed, mTempSpeed / 4);
             }
         }
-        handleResultSpeed(mSpeedCount >= maxCount || done);
+        handleResultSpeed(currentBytes, mSpeedCount >= maxCount || done);
     }
 
     /**
      * 结果的处理
      *
      * @param isDone
+     * @param currentBytes
      */
-    private void handleResultSpeed(boolean isDone) {
+    private void handleResultSpeed(long currentBytes, boolean isDone) {
         if (isDone) {
             finishSpeed();
             //回调最终的速度
@@ -186,8 +187,10 @@ public class SpeedManager {
             for (int i = 0; i < mTotalSpeeds.size(); i++) {
                 finalSpeedTotal += mTotalSpeeds.get(i);
             }
-            if (null != speedListener) {
+            if (null != speedListener && mTotalSpeeds.size() > 0) {
                 speedListener.finishSpeed(finalSpeedTotal / mTotalSpeeds.size(), finalSpeedTotal / mTotalSpeeds.size() / 4);
+            } else {
+                speedListener.finishSpeed(currentBytes, currentBytes / 4);
             }
         }
     }
