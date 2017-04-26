@@ -2,43 +2,36 @@
 网络测速 包含 网络延时,上下行速度,基于OkHttp3.0
 
 使用方式 :
+(1)设置网络延时的监听 : setNetDelayListener
+(2)设置下载速度的监听 : setSpeedListener (由于某种原因,上传速度取下载速度的1/4)
+(3)网络延时ping的ip : setPindCmd
+(4)设置测速地址 : setSpeedUrl
+(5)设置测速的回调次数 : setSpeedCount
+(6)设置测速超时时间 : setSpeedTimeOut
 ```
 SpeedManager speedManager = new SpeedManager.Builder()
-                .setSpeedUrl("url")
+                .setPindCmd("your ip")
+                .setSpeedUrl("your url")
                 .setSpeedCount(6)
-                .setNetDelayListener(new SpeedListener() {
-                    @Override
-                    public void speeding(double speed) {
+                .setSpeedTimeOut(10*1000)
+                .setNetDelayListener(new NetDelayListener() {
+                                    @Override
+                                    public void result(String delay) {
 
-                    }
+                                    }
+                                })
+                                .setSpeedListener(new SpeedListener() {
+                                    @Override
+                                    public void speeding(long downSpeed, long upSpeed) {
 
-                    @Override
-                    public void finishSpeed(double finalSpeed) {
+                                    }
 
-                    }
-                })
-                .setDownloadListener(new SpeedListener() {
-                    @Override
-                    public void speeding(double speed) {
-                        Toast.makeText(MainActivity.this,"test : " + speed ,Toast.LENGTH_LONG);
-                    }
+                                    @Override
+                                    public void finishSpeed(long finalDownSpeed, long finalUpSpeed) {
 
-                    @Override
-                    public void finishSpeed(double finalSpeed) {
-
-                    }
-                })
-                .setUpLoadListener(new SpeedListener() {
-                    @Override
-                    public void speeding(double speed) {
-
-                    }
-
-                    @Override
-                    public void finishSpeed(double finalSpeed) {
-
-                    }
-                })
+                                    }
+                                })
                 .builder();
-        speedManager.startSpeed();
+speedManager.startSpeed();
+
 ```
