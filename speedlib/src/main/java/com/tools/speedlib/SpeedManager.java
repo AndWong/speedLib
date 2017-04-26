@@ -42,6 +42,7 @@ public class SpeedManager {
     private SparseArray<Long> mTotalSpeeds = new SparseArray<>(); //保存每秒的速度
     private long mTempSpeed = 0L; //每秒的速度
     private int mSpeedCount = 0; //文件下载进度的回调次数
+    private boolean mIsStopSpeed = false; //是否结束测速
 
     private Handler mHandler = new Handler() {
         @Override
@@ -69,6 +70,7 @@ public class SpeedManager {
     public void startSpeed() {
         mSpeedCount = 0;
         mTempSpeed = 0;
+        mIsStopSpeed = false;
         mTotalSpeeds = new SparseArray<>();
         boolean isPingSucc = pingDelay(this.pingCmd);
         if (isPingSucc && null != speedListener) {
@@ -83,6 +85,7 @@ public class SpeedManager {
         if (call != null) {
             call.cancel();
         }
+        mIsStopSpeed = true;
     }
 
     /**
@@ -225,7 +228,7 @@ public class SpeedManager {
         int len;
         int size = 1024;
         byte[] buf = new byte[size];
-        while ((len = is.read(buf, 0, size)) != -1) {
+        while (!mIsStopSpeed && (len = is.read(buf, 0, size)) != -1) {
             Log.d("TAG", "byte length : " + len);
         }
     }

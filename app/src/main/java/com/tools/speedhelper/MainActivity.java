@@ -2,6 +2,7 @@ package com.tools.speedhelper;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 
 import com.tools.speedlib.SpeedManager;
@@ -16,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tx_delay;
     private TextView tx_down;
     private TextView tx_up;
-
+    SpeedManager speedManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +27,14 @@ public class MainActivity extends AppCompatActivity {
         tx_down = (TextView) findViewById(R.id.tx_down);
         tx_up = (TextView) findViewById(R.id.tx_up);
 
-        SpeedManager speedManager = new SpeedManager.Builder()
+        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speedManager.finishSpeed();
+            }
+        });
+
+        speedManager = new SpeedManager.Builder()
                 .setNetDelayListener(new NetDelayListener() {
                     @Override
                     public void result(String delay) {
@@ -55,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .setPindCmd("59.61.92.196")
-                .setSpeedCount(6)
+                .setSpeedCount(10)
                 .builder();
         speedManager.startSpeed();
     }

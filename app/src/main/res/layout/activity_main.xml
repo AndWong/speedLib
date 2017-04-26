@@ -107,4 +107,13 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="127dp"
         app:sv_endDegree="405" />
+
+    <Button
+        android:id="@+id/STOP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Button" />
+
 </RelativeLayout>
