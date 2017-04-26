@@ -50,7 +50,9 @@ public class SpeedManager {
             super.handleMessage(msg);
             switch (msg.what) {
                 case MSG_TIMEOUT:
-                    handleResultSpeed(0L, true);
+                    if (!mIsStopSpeed) {
+                        handleResultSpeed(0L, true);
+                    }
                     break;
             }
         }
