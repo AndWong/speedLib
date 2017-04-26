@@ -86,6 +86,7 @@ public class SpeedManager {
             call.cancel();
         }
         mIsStopSpeed = true;
+        TimerTaskUtil.cacleTimer(mHandler, MSG_TIMEOUT);
     }
 
     /**
