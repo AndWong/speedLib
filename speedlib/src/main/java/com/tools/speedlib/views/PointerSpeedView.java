@@ -66,7 +66,7 @@ public class PointerSpeedView extends Speedometer {
         speedometerDefault.indicator = new SpindleIndicator(getContext())
                 .setIndicatorWidth(dpTOpx(16f))
                 .setIndicatorColor(Color.WHITE);
-        speedometerDefault.backgroundCircleColor = Color.parseColor("#48cce9");
+        speedometerDefault.backgroundCircleColor = Color.parseColor("#00bafe");
         speedometerDefault.speedometerWidth = dpTOpx(10f);
         return speedometerDefault;
     }

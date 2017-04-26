@@ -75,7 +75,7 @@ public class ConverUtil {
         String floatPart = null;
         switch (unit) {
             case 0: //unit B
-                return new String[]{temp + "", "B/s"};
+                return new String[]{temp + "", "B/S"};
             case 1: //unit KB
                 floatPart = speed % UNIT_KB + "";
                 if (floatPart.length() >= 2) {
