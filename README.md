@@ -4,36 +4,36 @@
 使用方式 :
 (1)设置网络延时的监听 : setNetDelayListener
 (2)设置下载速度的监听 : setSpeedListener (由于某种原因,上传速度取下载速度的1/4)
-(3)网络延时ping的ip : setPindCmd
+(3)设置网络延时ping的ip : setPindCmd
 (4)设置测速地址 : setSpeedUrl
 (5)设置测速的回调次数 : setSpeedCount
 (6)设置测速超时时间 : setSpeedTimeOut
 ```
 
 ```
-SpeedManager speedManager = new SpeedManager.Builder()
+        SpeedManager speedManager = new SpeedManager.Builder()
                 .setPindCmd("your ip")
                 .setSpeedUrl("your url")
                 .setSpeedCount(6)
-                .setSpeedTimeOut(10*1000)
+                .setSpeedTimeOut(10 * 1000)
                 .setNetDelayListener(new NetDelayListener() {
-                                    @Override
-                                    public void result(String delay) {
+                    @Override
+                    public void result(String delay) {
 
-                                    }
-                                })
-                                .setSpeedListener(new SpeedListener() {
-                                    @Override
-                                    public void speeding(long downSpeed, long upSpeed) {
+                    }
+                })
+                .setSpeedListener(new SpeedListener() {
+                    @Override
+                    public void speeding(long downSpeed, long upSpeed) {
 
-                                    }
+                    }
 
-                                    @Override
-                                    public void finishSpeed(long finalDownSpeed, long finalUpSpeed) {
+                    @Override
+                    public void finishSpeed(long finalDownSpeed, long finalUpSpeed) {
 
-                                    }
-                                })
+                    }
+                })
                 .builder();
-speedManager.startSpeed();
+        speedManager.startSpeed();
 
 ```
