@@ -41,7 +41,7 @@ public abstract class Gauge extends View {
      */
     private String unit = "KB/S";
     private boolean withTremble = true;
-    private String currentSpeed = "0";
+    private String currentSpeed = "0.00";
 
     /**
      * the max range in speedometer, {@code default = 100}
@@ -137,7 +137,7 @@ public abstract class Gauge extends View {
      */
     private float unitSpeedInterval = dpTOpx(1);
     private float speedTextPadding = dpTOpx(20f);
-    private boolean unitUnderSpeedText = false;
+    private boolean unitUnderSpeedText = true;
     private Bitmap speedUnitTextBitmap;
 
     /**
@@ -433,9 +433,15 @@ public abstract class Gauge extends View {
         return new RectF(left, top, left + getSpeedUnitTextWidth(), top + getSpeedUnitTextHeight());
     }
 
+    /**
+     * modify by whd
+     * add text length
+     *
+     * @return
+     */
     private float getMaxWidthForSpeedUnitText() {
-        String speedUnitText = speedTextFormat == FLOAT_FORMAT ? String.format(locale, "%.1f", (float) maxSpeed)
-                : String.format(locale, "%d", maxSpeed);
+        String speedUnitText = speedTextFormat == FLOAT_FORMAT ? String.format(locale, "%.2f", (float) maxSpeed * 10)
+                : String.format(locale, "%d", maxSpeed * 10);
         if (unitUnderSpeedText)
             return Math.max(speedTextPaint.measureText(speedUnitText)
                     , unitTextPaint.measureText(getUnit()));
@@ -1309,7 +1315,7 @@ public abstract class Gauge extends View {
     }
 
     /**
-     * check if correct speed in <b>High Speed Section</b>.
+     * check if correct speed in <b>High Speed Section</b>.20
      *
      * @return true if correct speed in High Speed Section
      * , and it is not in Low Speed Section or Medium Speed Section.

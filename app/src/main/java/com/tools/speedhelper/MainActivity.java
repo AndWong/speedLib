@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setSpeedView(long speed, String[] result) {
         if (null != result && 2 == result.length) {
-            speedometer.setCurrentSpeed(result[0]);
-            speedometer.setUnit(result[1]);
+            speedometer.setCurrentSpeed("1023.99");
+            speedometer.setUnit("KB/S");
             speedometer.speedPercentTo(ConverUtil.getSpeedPercent(speed));
         }
     }
