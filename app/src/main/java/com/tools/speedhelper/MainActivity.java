@@ -30,10 +30,12 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speedManager.finishSpeed();
+                start();
             }
         });
+    }
 
+    private void start(){
         speedManager = new SpeedManager.Builder()
                 .setNetDelayListener(new NetDelayListener() {
                     @Override
@@ -63,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .setPindCmd("59.61.92.196")
-                .setSpeedCount(10)
+                .setSpeedCount(6)
+                .setSpeedTimeOut(2000)
                 .builder();
         speedManager.startSpeed();
     }

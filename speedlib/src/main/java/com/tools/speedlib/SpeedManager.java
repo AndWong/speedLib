@@ -220,8 +220,8 @@ public class SpeedManager {
                 } else {
                     //超时
                     speedListener.finishSpeed(0L, 0L);
-                    speedListener = null;
                 }
+                speedListener = null;
                 TimerTaskUtil.cacleTimer(mHandler, MSG_TIMEOUT);
             }
         }
