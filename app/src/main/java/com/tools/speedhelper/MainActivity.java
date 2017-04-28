@@ -9,11 +9,11 @@ import com.tools.speedlib.SpeedManager;
 import com.tools.speedlib.listener.NetDelayListener;
 import com.tools.speedlib.listener.SpeedListener;
 import com.tools.speedlib.utils.ConverUtil;
-import com.tools.speedlib.views.PointerSpeedView;
+import com.tools.speedlib.views.AwesomeSpeedView;
 
 
 public class MainActivity extends AppCompatActivity {
-    private PointerSpeedView speedometer;
+    private AwesomeSpeedView speedometer;
     private TextView tx_delay;
     private TextView tx_down;
     private TextView tx_up;
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        speedometer = (PointerSpeedView) findViewById(R.id.speedometer);
+        speedometer = (AwesomeSpeedView) findViewById(R.id.speedometer);
         tx_delay = (TextView) findViewById(R.id.tx_delay);
         tx_down = (TextView) findViewById(R.id.tx_down);
         tx_up = (TextView) findViewById(R.id.tx_up);
@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setSpeedView(long speed, String[] result) {
         if (null != result && 2 == result.length) {
-            speedometer.setCurrentSpeed("1023.99");
-            speedometer.setUnit("KB/S");
+            speedometer.setCurrentSpeed(result[0]);
+            speedometer.setUnit(result[1]);
             speedometer.speedPercentTo(ConverUtil.getSpeedPercent(speed));
         }
     }

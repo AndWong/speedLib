@@ -111,7 +111,7 @@
         <attr name="sv_withEffects" />
     </declare-styleable>
 
-    <declare-styleable name="AwesomeSpeedometer" parent="Speedometer">
+    <declare-styleable name="AwesomeSpeedView" parent="Speedometer">
         <attr name="sv_speedometerColor" />
         <attr name="sv_trianglesColor" format="color"/>
     </declare-styleable>
