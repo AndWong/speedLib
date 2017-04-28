@@ -31,7 +31,7 @@ public class AwesomeSpeedView extends Speedometer {
             trianglesPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private RectF speedometerRect = new RectF();
 
-    private int speedometerColor = Color.parseColor("#00bafe");
+    private int speedometerColor = Color.parseColor("#007AFF");
 
     public AwesomeSpeedView(Context context) {
         this(context, null);
@@ -63,7 +63,7 @@ public class AwesomeSpeedView extends Speedometer {
         SpeedometerDefault speedometerDefault = new SpeedometerDefault();
         speedometerDefault.indicator = new TriangleIndicator(getContext())
                 .setIndicatorWidth(dpTOpx(25f))
-                .setIndicatorColor(Color.parseColor("#00bafe"));
+                .setIndicatorColor(Color.parseColor("#007AFF"));
         speedometerDefault.startDegree = 135;
         speedometerDefault.endDegree = 135+320;
         speedometerDefault.speedometerWidth = dpTOpx(60);
